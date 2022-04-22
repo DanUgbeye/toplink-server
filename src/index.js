@@ -1,7 +1,9 @@
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const Settings = require('./helpers/settings');
+const { dbConnection } = require('./utils/database');
+const Router = require('./appRouter');
 
 const app = express();
 app.use(cors());
@@ -12,7 +14,15 @@ app.route('/').get((req, res) => {
     res.send('server up and running!!!');
 })
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, ()=>{
-    console.log(`app started on port ${PORT}`);
-});
+app.use(Router);
+
+const conn = dbConnection();
+conn.then(() => {
+    console.log('db connected successfully');
+    const PORT = Settings.getPort();
+    app.listen( PORT, () => {
+        console.log(`app started on port ${PORT}`);
+    });
+}).catch((error) => {
+    console.log(error);
+})
