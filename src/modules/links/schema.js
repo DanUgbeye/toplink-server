@@ -47,15 +47,17 @@ let data = {
 }
 
 
-Joi.validate(data, validator, (err, value) => {
+function validateUserSchema(data) {
+    return Joi.validate(data, validator, (err, value) => {
 
-    if (err) {
+        if (err) {
 
-        console.log(err.details);
+            return value
 
-    } else {
+        } else {
 
-        console.log(value);
-    }
-});
+            return value
+        }
+    });
+}
 

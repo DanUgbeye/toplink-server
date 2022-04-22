@@ -30,7 +30,7 @@ exports.validator = Joi.object({
         .max(11)
         .required(),
     profilePhoto: Joi
-        .image()
+        .url()
         .minDimensions(100, 50)
         .required(),
     bio: Joi.string()
@@ -41,7 +41,7 @@ exports.validator = Joi.object({
     role: Joi.string()
         .required(),
     coverPhoto: Joi
-        .image()
+        .url()
         .minDimensions(100, 50)
         .required(),
     subscription: Joi.string()
@@ -53,16 +53,16 @@ exports.validator = Joi.object({
 exports.userSchema = new mongoose.Schema({
     id: String,
     name: {
-        firstname : "String",
-        lastname : "String"
+        first : String,
+        last : String
     },
     username: String,
     email: String,
     phoneNumber: Number,
-    profilePhoto: Image,
+    profilePhoto: String,
     bio: String,
     role: String,
-    coverPhot: Image,
+    coverPhoto: String,
     subscription: String,
     disabled: Boolean
 });
@@ -81,14 +81,16 @@ let data = {
     disabled
 }
 
-Joi.validate(data, validator, (err, value) => {
+function validateUserSchema(data){
+    return Joi.validate(data, validator, (err, value) => {
 
-    if (err) {
+        if (err) {
 
-        console.log(err.details);
+            return value
 
-    } else {
+        } else {
 
-        console.log(value);
-    }
-});
+            return value
+        }
+    });
+}
