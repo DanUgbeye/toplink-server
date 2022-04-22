@@ -1,7 +1,6 @@
 MODULES
 * Links
-* Profile
-* Account
+* User
 * Pages
 * auth
 
