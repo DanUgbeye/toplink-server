@@ -5,11 +5,19 @@ const userModel = require("./schema");
 async function createNewUser() {
   let userName = req.body.username;
   let userEmail = req.body.email;
+  
   let phoneNumber = req.body.phoneNumber
-  let userNameDuplicate = userModel.find((user) => user.username == userName);
-  let userEmailDuplicate = userModel.find((user) => user.email == userEmail);
-  let userPhoneNumberDuplicate = userModel.find((user)=> user.phoneNumber == phoneNumber)
-  if (!userEmailDuplicate || !userNameDuplicate || !userPhoneNumberDuplicate) {
+  function check(userName,userEmail, phoneNumber){
+    let userNameDuplicate = userModel.find((user) => user.username == userName);
+    let userEmailDuplicate = userModel.find((user) => user.email == userEmail);
+    let userPhoneNumberDuplicate = userModel.find((user)=> user.phoneNumber == phoneNumber)
+    if(!userEmailDuplicate || !userPhoneNumberDuplicate || !userNameDuplicate){
+      return true
+    }
+    
+  }
+ 
+  if (check == true) {
     try {
       const newUser = new userModel({
         id,
@@ -26,7 +34,8 @@ async function createNewUser() {
         privacy,
       });
 
-      await newUser.save();
+      const result = await newUser.save();
+      return result;
     } catch (error) {
       console.log(error);
     }
@@ -56,7 +65,7 @@ async function updateUser(id) {
         privacy,
       };
       const result = await userModel.findByIdAndUpdate(id, updatedUser);
-      console.log(result);
+      return result;
     } catch (error) {}
   }
 }
@@ -70,5 +79,6 @@ async function deleteUser(id) {
 
 async function getAllUsers() {
   const result = await userModel.find();
-  console.log(result);
+  return result;
 }
+

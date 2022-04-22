@@ -4,9 +4,17 @@ const linkModel = require("./schema");
 async function createNewLink() {
   let linkTitle = req.body.linkTitle;
   let linkUrl = req.body.linkUrl;
-  let linktitleDuplicate = linkModel.find((link) => link.title == linkTitle);
-  let linkUrlDuplicate = linkModel.find((link) => link.Url == linkUrl);
-  if (!linktitleDuplicate || !linkUrlDuplicate) {
+  function check(linkTitle, linkUrl) {
+    let linkTitleDuplicate = linkModel.find((link) => link.title == linkTitle);
+    let linkUrlDuplicate = linkModel.find((link) => link.Url == linkUrl);
+    if (!linkUrlDuplicate || !linkTitleDuplicate) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  if (check == 1) {
     try {
       const newLink = new linkModel({
         id,
@@ -18,7 +26,8 @@ async function createNewLink() {
         privacy,
       });
 
-      await newLink.save();
+      const result = await newLink.save();
+      return result;
     } catch (error) {
       console.log(error);
     }
@@ -34,17 +43,16 @@ async function updateLink(id) {
     console.log("Error: Link doesnt exist");
   } else {
     try {
-       let  updatedLink= {
+      let updatedLink = {
         author,
         title,
         description,
         url,
         icon,
         privacy,
-
-       } 
-       const result = await linkModel.findByIdAndUpdate(id, updateLink );
-       console.log(result)
+      };
+      const result = await linkModel.findByIdAndUpdate(id, updatedLink);
+      return result;
     } catch (error) {}
   }
 }
@@ -56,10 +64,7 @@ async function deleteLink(id) {
     .catch((err) => console.log(err));
 }
 
-
 async function getAllLink(author) {
-    const result = await linkModel.find({author: author})
-    console.log(result)
-    
+  const result = await linkModel.find({ author: author });
+  return result;
 }
-
