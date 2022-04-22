@@ -27,7 +27,7 @@ exports.validator = Joi.object({
         .required()
 
 });
-const pageSchema = new mongoose.Schema({
+exports.pageSchema = new mongoose.Schema({
     id: String,
     author: String,
     title: String,
@@ -37,7 +37,6 @@ const pageSchema = new mongoose.Schema({
     links: Array,
 
 });
-exports.pageModel = mongoose.model('page', pageSchema);
 
 let data = {
     id,

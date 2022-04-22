@@ -25,7 +25,7 @@ exports.validator = Joi.object({
     privacy: Joi.string()
 });
 
-const linkSchema = new mongoose.Schema({
+exports.linkSchema = new mongoose.Schema({
     id: String,
     author: String,
     title: String,
@@ -35,7 +35,6 @@ const linkSchema = new mongoose.Schema({
     privacy: String,
 
 });
-exports.linkModel = mongoose.model('link', linkSchema);
 
 let data = {
     id,

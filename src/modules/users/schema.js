@@ -50,9 +50,12 @@ exports.validator = Joi.object({
         .required(),
 });
 
-const userSchema = new mongoose.Schema({
+exports.userSchema = new mongoose.Schema({
     id: String,
-    Name: String,
+    name: {
+        firstname : "String",
+        lastname : "String"
+    },
     username: String,
     email: String,
     phoneNumber: Number,
@@ -63,7 +66,6 @@ const userSchema = new mongoose.Schema({
     subscription: String,
     disabled: Boolean
 });
-exports.userModel = mongoose.model('user', userSchema);
 
 let data = {
     id,
