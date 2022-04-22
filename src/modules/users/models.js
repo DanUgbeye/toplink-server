@@ -68,7 +68,7 @@ async function deleteUser(id) {
     .catch((err) => console.log(err));
 }
 
-async function getAllUsers(author) {
+async function getAllUsers() {
   const result = await userModel.find();
   console.log(result);
 }
