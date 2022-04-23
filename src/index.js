@@ -20,6 +20,7 @@ const conn = dbConnection();
 
 conn.then(() => {
     console.log('db connected successfully');
+    
     const PORT = Settings.getPort();
     app.listen( PORT, () => {
         console.log(`app started on port ${PORT}`);

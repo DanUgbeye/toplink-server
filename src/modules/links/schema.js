@@ -32,13 +32,4 @@ exports.linkSchema = new mongoose.Schema({
 
 });
 
-// let data = {
-//     id,
-//     author,
-//     title,
-//     description,
-//     url,
-//     icon,
-//     privacy,
-// }
 
