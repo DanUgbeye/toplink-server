@@ -12,11 +12,12 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.route('/').get((req, res) => {
     res.send('server up and running!!!');
-})
+});
 
 app.use(Router);
 
 const conn = dbConnection();
+
 conn.then(() => {
     console.log('db connected successfully');
     const PORT = Settings.getPort();

@@ -1,54 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const BaseJoi = require('joi');
-const userID = Joi.string().guid({ version: 'uuidv4' })
-const ImageExtension = require('joi-image-extension')
-const Joi = BaseJoi.extend(ImageExtension)
-const Name = require('./className')
-exports.validator = Joi.object({
-    id: userID.required()
-        .required()
-        .strict(),
-    Name: Joi.string()
-        .alpha()
-        .min(2)
-        .max(50)
-        .required(),
-    username: Joi.string()
-        .alphanum()
-        .min(4)
-        .max(50)
-        .required(),
-    email: Joi.string()
-        .email({
-            minDomainSegments: 2,
-            tlds: { allow: ['com', 'net'] }
-        })
-        .lowercase(),
-    phoneNumber: Joi.number()
-        .min(9)
-        .max(11)
-        .required(),
-    profilePhoto: Joi
-        .url()
-        .minDimensions(100, 50)
-        .required(),
-    bio: Joi.string()
-        .alphanum()
-        .min(20)
-        .max(240)
-        .required(),
-    role: Joi.string()
-        .required(),
-    coverPhoto: Joi
-        .url()
-        .minDimensions(100, 50)
-        .required(),
-    subscription: Joi.string()
-        .required(),
-    disabled: Joi.boolean()
-        .required(),
-});
+const Joi = require('joi');
+// const userID = Joi.string().guid({ version: 'uuidv4' })
+// const ImageExtension = require('joi-image-extension');
+// const Joi = BaseJoi.extend(ImageExtension)
 
 exports.userSchema = new mongoose.Schema({
     id: String,
@@ -67,30 +22,60 @@ exports.userSchema = new mongoose.Schema({
     disabled: Boolean
 });
 
-let data = {
-    id,
-    Name,
-    username,
-    email,
-    phoneNumber,
-    profilePhoto,
-    bio,
-    role,
-    coverPhoto,
-    subscription,
-    disabled
-}
+exports.userSchemaValidator = Joi.object({
 
-function validateUserSchema(data){
-    return Joi.validate(data, validator, (err, value) => {
+    Name: Joi.object({
+        first: Joi.string()
+        .alpha()
+        .min(2)
+        .max(50)
+        .required(),
 
-        if (err) {
+        last: Joi.string()
+        .alpha()
+        .min(2)
+        .max(50)
+        .required(),
+    }),
 
-            return value
+    username: Joi.string()
+        .alphanum()
+        .min(4)
+        .max(50)
+        .required(),
 
-        } else {
+    email: Joi.string()
+        .email({
+            minDomainSegments: 2,
+            tlds: { allow: ['com', 'net'] }
+        })
+        .lowercase()
+        .required(),
 
-            return value
-        }
-    });
-}
+    phoneNumber: Joi.number()
+        .min(9)
+        .max(11),
+
+    profilePhoto: Joi
+        .url()
+        .minDimensions(100, 50),
+
+    bio: Joi.string()
+        .alphanum()
+        .min(20)
+        .max(240),
+        
+    role: Joi.string()
+        .required(),
+
+    coverPhoto: Joi
+        .url()
+        .minDimensions(100, 50),
+
+    subscription: Joi.string()
+        .required(),
+
+    disabled: Joi.boolean()
+        .required(),
+});
+
