@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const Settings = require('./helpers/settings');
 const { dbConnection } = require('./utils/database');
 const Router = require('./appRouter');
+const userRouter = require('./modules/users/routes');
 
 const app = express();
 app.use(cors());
