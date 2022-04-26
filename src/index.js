@@ -9,6 +9,7 @@ const userRouter = require('./modules/users/routes');
 const app = express();
 app.use(cors());
 app.use(morgan('tiny'));
+app.use(express.json())
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.route('/').get((req, res) => {
