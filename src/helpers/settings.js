@@ -12,6 +12,10 @@ class Settings {
         return host
     }
 
+    static getDB_URI(){
+        return process.env.DB_URI
+    }
+
     
 }
 

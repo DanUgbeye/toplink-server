@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 const Joi = require('joi');
-const { validator } = require('./user-schema');
-const userID = Joi.string().guid({ version: 'uuidv4' })
-exports.validator = Joi.object({
+
+exports.pageSchemaValidator = Joi.object({
     id: userID.required()
         .required()
         .strict(),
@@ -27,7 +25,8 @@ exports.validator = Joi.object({
         .required()
 
 });
-const pageSchema = new mongoose.Schema({
+
+exports.pageSchema = new mongoose.Schema({
     id: String,
     author: String,
     title: String,
@@ -37,27 +36,15 @@ const pageSchema = new mongoose.Schema({
     links: Array,
 
 });
-module.exports = mongoose.model('page', pageSchema);
 
-let data = {
-    id,
-    author,
-    title,
-    description,
-    url,
-    privacy,
-    links
-}
+// let data = {
+//     id,
+//     author,
+//     title,
+//     description,
+//     url,
+//     privacy,
+//     links
+// }
 
 
-Joi.validate(data, validator, (err, value) => {
-
-    if (err) {
-
-        console.log(err.details);
-
-    } else {
-
-        console.log(value);
-    }
-});

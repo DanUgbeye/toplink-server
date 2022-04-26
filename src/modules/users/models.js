@@ -1,84 +1,106 @@
 // all the models come in here
-// all the models come in here
-const userModel = require("./schema");
+const mongoose = require('mongoose');
+const { userSchema, userSchemaValidator } = require("./schema");
+const { validateData } = require("../../utils/validator");
+const Response = require('../../utils/response');
 
-async function createNewUser() {
-  let userName = req.body.username;
-  let userEmail = req.body.email;
+const userModel = mongoose.model('User', userSchema);
+
+async function isUniqueEmail(email) {
+  let user = await userModel.find({ email: email });
+  if(!user) {
+    return true;
+  }
+  return false;
+}
+
+async function isUniqueUsername(username) {
+  let user = await userModel.find({ username: username });
+  if(!user) {
+    return true;
+  }
+  return false;
+}
+
+exports.getUserById = async function getUserById(id) {
+  const result = await userModel.find({ _id: id });
+  if(!result) {
+    return Response('error', 400, 'invalid user id provided');   
+  }
+  return Response('success', 201, 'fetched all users successfully', result);
+}
+
+exports.createNewUser = async function createNewUser(user) {
+
+  let validatedData = validateData(user, userSchemaValidator);
+
+  // if the user data is not valid, return an error response
+  if(!validatedData.isValid) {
+    return Response('error', 400, validatedData.error);
+  }
+
+  if( !isUniqueEmail(user.email) ) {
+    return Response('error', 400, 'email address already exists');
+  }
+
+  if( !isUniqueUsername(user.username) ) {
+    return Response('error', 400, 'username already exists');   
+  }
   
-  let phoneNumber = req.body.phoneNumber
-  function check(userName,userEmail, phoneNumber){
-    let userNameDuplicate = userModel.find((user) => user.username == userName);
-    let userEmailDuplicate = userModel.find((user) => user.email == userEmail);
-    let userPhoneNumberDuplicate = userModel.find((user)=> user.phoneNumber == phoneNumber)
-    if(!userEmailDuplicate || !userPhoneNumberDuplicate || !userNameDuplicate){
-      return true
+  const newUser = new userModel(user);
+  newUser.save()
+    .then((result) => {
+      return Response('success', 201, 'user created successfully', result);
+    })
+    .catch((error) => {
+      return Response('error', 500, error);
+    });
+  
+}
+
+exports.updateUser = async function updateUser(id, userData) {
+
+  if(userData.email) {
+    if( !isUniqueEmail(user.email) ) {
+      return Response('error', 400, 'email address already exists');
     }
-    
   }
- 
-  if (check == true) {
-    try {
-      const newUser = new userModel({
-        id,
-        Name,
-        username,
-        email,
-        phoneNumber,
-        profilePhoto,
-        bio,
-        role,
-        coverPhoto,
-        subscription,
-        disabled,
-        privacy,
-      });
 
-      const result = await newUser.save();
-      return result;
-    } catch (error) {
-      console.log(error);
+  if(userData.username) {
+    if( !isUniqueUsername(user.username) ) {
+      return Response('error', 400, 'username already exists');   
     }
-  } else {
-    console.log("Email  address or Phone number or Username already in use");
   }
-}
 
-async function updateUser(id) {
-  const id = id;
-  const findId = userModel.find((user) => user.id == id);
-  if (!findId) {
-    console.log("Error: User doesnt exist");
-  } else {
-    try {
-      let updatedUser = {
-        Name,
-        username,
-        email,
-        phoneNumber,
-        profilePhoto,
-        bio,
-        role,
-        coverPhoto,
-        subscription,
-        disabled,
-        privacy,
-      };
-      const result = await userModel.findByIdAndUpdate(id, updatedUser);
-      return result;
-    } catch (error) {}
+  const user = userModel.find({ _id: id });
+  if (!user) {
+    return Response('error', 400, 'invalid user id provided');   
   }
+  try {
+    // updates the user data 
+    const updatedUser = {
+      ...user,
+      ...userData
+    }
+    const result = await userModel.findByIdAndUpdate(id, updatedUser);
+    return Response('success', 201, 'user data updated successfully', result);
+  } catch (error) {
+    return Response('error', 500, error);
+  }
+
 }
 
-async function deleteUser(id) {
-  await userModel
-    .findByIdAndDelete(id)
-    .then((res) => console.log("Deleted!"))
-    .catch((err) => console.log(err));
+exports.deleteUser = async function deleteUser(id) {
+  const deletedUser = await userModel.findByIdAndDelete(id)
+  if(!deletedUser) {
+    return Response('error', 400, 'invalid user id provided');   
+  }
+  return Response('success', 200, 'user deleted successfully');
 }
 
-async function getAllUsers() {
+exports.getAllUsers = async function getAllUsers() {
   const result = await userModel.find();
-  return result;
+  return Response('success', 201, 'fetched all users successfully', result);
 }
+
 

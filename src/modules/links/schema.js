@@ -1,11 +1,7 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 const Joi = require('joi');
-const userID = Joi.string().guid({ version: 'uuidv4' })
-exports.validator = Joi.object({
-    id: userID.required()
-        .required()
-        .strict(),
+
+exports.linkSchemaValidator = Joi.object({
     author: Joi.string()
         .alphanum()
         .min(4)
@@ -25,7 +21,7 @@ exports.validator = Joi.object({
     privacy: Joi.string()
 });
 
-const linkSchema = new mongoose.Schema({
+exports.linkSchema = new mongoose.Schema({
     id: String,
     author: String,
     title: String,
@@ -35,28 +31,5 @@ const linkSchema = new mongoose.Schema({
     privacy: String,
 
 });
-module.exports  = mongoose.model('link', linkSchema);
 
-let data = {
-    id,
-    author,
-    title,
-    description,
-    url,
-    icon,
-    privacy,
-}
-
-
-Joi.validate(data, validator, (err, value) => {
-
-    if (err) {
-
-        console.log(err.details);
-
-    } else {
-
-        console.log(value);
-    }
-});
 
