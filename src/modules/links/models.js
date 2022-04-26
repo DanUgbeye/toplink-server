@@ -7,9 +7,9 @@ const Response = require("../../utils/response");
 
 const linkModel = mongoose.model("Link", linkSchema);
 
-async function isUniqueLink(link, author) {
+async function isUniqueLink(url, author) {
   let link = await linkModel.find({
-    $and: [{ author: author }, { link: link }],
+    $and: [{ author: author }, { url:  url }],
   });
   if (!link) {
     return true;
@@ -33,7 +33,7 @@ exports.createNewLink = async function createNewLink(link) {
     return Response("error", 400, validatedData.error);
   }
 
-  if ((!isUniqueLink(link.url), link.author)) {
+  if (!isUniqueLink(link.url, link.author)) {
     return Response("error", 400, " Link already exists");
   }
 
@@ -90,7 +90,7 @@ exports.getAllLinks = async function getAllLink(author) {
   });
   return Response(
     "success",
-    201,
+    200,
     "fetched all links relating to this author successfully",
     result
   );
