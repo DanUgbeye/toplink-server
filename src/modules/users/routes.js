@@ -1,9 +1,9 @@
 // all the routes come in here
 const userRouter = require('express').Router()
-const { getUserById, createNewUser, updateUser, deleteUser } = require("./controllers");
+const { getUserById, createUser, updateUser, deleteUser } = require("./controllers");
 
 
-userRouter.route('/').post(createNewUser)
+userRouter.route('/').post(createUser)
 
 userRouter.route('/:id').get(getUserById)
 

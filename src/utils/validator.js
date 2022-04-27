@@ -6,17 +6,18 @@ const Joi = require('joi');
  * @param validator this is a joi schema to perform the validation
  * @returns 
  */
-exports.validateData = (data, validator) => {
-    const { error, value } = validator.validate(data);
-    if (error) {
-        return {
-            isValid: false,
-            error
-        };
-    } else {
+exports.validateData = async (data, validator) => {
+    try {
+        const value = await validator.validateAsync(data);
         return {
             isValid: true,
             value
+        };
+    }
+     catch (error) {
+        return {
+            isValid: false,
+            error
         };
     }
 }
