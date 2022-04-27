@@ -26,7 +26,7 @@ exports.userSchemaValidator = Joi.object({
 
     Name: Joi.object({
         first: Joi.string()
-        .alpha()
+        z.alpha()
         .min(2)
         .max(50)
         .required(),
