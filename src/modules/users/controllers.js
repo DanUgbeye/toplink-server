@@ -1,6 +1,5 @@
 // all the controllers come in here
-
-const { getUserById, createNewUser, updateUser, deleteUser } = require("./models");
+const { getUserById, createUser, updateUser, deleteUser } = require("./models");
 
 exports.getUserById = async (req, res) => {
     let id = req.params.id
@@ -10,7 +9,7 @@ exports.getUserById = async (req, res) => {
 
 exports.createUser = async (req, res) => {
     let user = req.body;
-    const response = await createNewUser(user);
+    const response = await createUser(user);
     res.status(response.code).send(response);
 }
 

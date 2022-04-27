@@ -9,7 +9,7 @@ const linkModel = mongoose.model("Link", linkSchema);
 
 async function isUniqueLink(url, author) {
   let link = await linkModel.find({
-    $and: [{ author: author }, { url:  url }],
+    $and: [{ author: author }, { url: url }],
   });
   if (!link) {
     return true;
@@ -17,7 +17,7 @@ async function isUniqueLink(url, author) {
   return false;
 }
 
-exports.getLLinkById = async function getLinkById(id) {
+exports.getLinkById = async function getLinkById(id) {
   const result = await linkModel.find({ _id: id });
   if (!result) {
     return Response("error", 400, "invalid link id provided");
@@ -25,8 +25,8 @@ exports.getLLinkById = async function getLinkById(id) {
   return Response("success", 201, "fetched link successfully", result);
 };
 
-exports.createNewLink = async function createNewLink(link) {
-  let validatedData = validateData(link, linkSchemaValidator);
+exports.createLink = async function createLink(link) {
+  let validatedData = await validateData(link, linkSchemaValidator);
 
   // if the link data is not valid, return an error response
   if (!validatedData.isValid) {
@@ -50,7 +50,7 @@ exports.createNewLink = async function createNewLink(link) {
 
 exports.updateLink = async function updateLink(id, linkData) {
   if (linkData.url) {
-    if (!isUniqueLink(linkData.url, linkData.author)) {
+    if (!(await isUniqueLink(linkData.url, linkData.author))) {
       return Response(
         "error",
         400,
@@ -59,7 +59,7 @@ exports.updateLink = async function updateLink(id, linkData) {
     }
   }
 
-  const link = linkModel.find({ _id: id });
+  const link = await linkModel.find({ _id: id });
   if (!link) {
     return Response("error", 400, "invalid link id provided");
   }

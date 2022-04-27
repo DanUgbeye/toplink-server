@@ -6,14 +6,17 @@ const Joi = require('joi');
 // const Joi = BaseJoi.extend(ImageExtension)
 
 exports.userSchema = new mongoose.Schema({
-    id: String,
     name: {
         first : String,
         last : String
     },
     username: String,
     email: String,
-    phoneNumber: Number,
+    phoneNumber: {
+        countryCode: Number,
+        number: Number
+    },
+    password: String,
     profilePhoto: String,
     bio: String,
     role: String,
@@ -24,15 +27,13 @@ exports.userSchema = new mongoose.Schema({
 
 exports.userSchemaValidator = Joi.object({
 
-    Name: Joi.object({
+    name: Joi.object().keys({
         first: Joi.string()
-        .alpha()
         .min(2)
         .max(50)
         .required(),
 
         last: Joi.string()
-        .alpha()
         .min(2)
         .max(50)
         .required(),
@@ -52,25 +53,23 @@ exports.userSchemaValidator = Joi.object({
         .lowercase()
         .required(),
 
-    phoneNumber: Joi.number()
-        .min(9)
-        .max(11),
+    phoneNumber: Joi.object().keys({
+        countryCode: Joi.number().required(),
 
-    profilePhoto: Joi
-        .url()
-        .minDimensions(100, 50),
+        number: Joi.number().required()
+    }),
+
+    password: Joi.string(),
+
+    profilePhoto: Joi.string().uri(),
 
     bio: Joi.string()
-        .alphanum()
-        .min(20)
         .max(240),
         
     role: Joi.string()
         .required(),
 
-    coverPhoto: Joi
-        .url()
-        .minDimensions(100, 50),
+    coverPhoto: Joi.string().uri(),
 
     subscription: Joi.string()
         .required(),

@@ -13,7 +13,7 @@ const Response = (type='', code=200, message='', data={}) => {
     if(type === 'success' && data) {
         response.data = data;
     }
-    return JSON.stringify(response);
+    return response;
 }
 
 module.exports = Response;
