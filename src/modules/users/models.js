@@ -31,7 +31,7 @@ exports.getUserById = async function getUserById(id) {
     return Response('success', 201, 'fetched user data successfully', result);
     
   } catch (error) {
-    return Response('error', 500, error.message);
+    return Response('error', 500, (error.message ? error.message : error));
   }
 }
 
@@ -41,7 +41,7 @@ exports.createUser = async function createUser(user) {
 
   // if the user data is not valid, return an error response
   if(!validatedData.isValid) {
-    return Response('error', 400, validatedData.error.message);
+    return Response('error', 400, (validatedData.error.message ? validatedData.error.message : validatedData.error));
   }
 
   if( !(await isUniqueEmail(user.email)) ) {
@@ -58,7 +58,7 @@ exports.createUser = async function createUser(user) {
       return Response('success', 201, 'user created successfully', result);
     })
     .catch((error) => {
-      return Response('error', 500, error);
+      return Response('error', 500, (error.message ? error.message : error));
     });
   return response;
 }
@@ -98,23 +98,31 @@ exports.updateUser = async function updateUser(id, userData) {
     const result = await userModel.findByIdAndUpdate(id, updatedUser, { new: true });
     return Response('success', 201, 'user data updated successfully', result);
   } catch (error) {
-    return Response('error', 500, error);
+    return Response('error', 500, (error.message ? error.message : error));
   }
 
 }
 
 exports.deleteUser = async function deleteUser(id) {
-  const deletedUser = await userModel.findByIdAndDelete(id)
-  if(!deletedUser) {
-    return Response('error', 400, 'invalid user id provided');   
+  try {
+    const deletedUser = await userModel.findByIdAndDelete(id)
+    if(!deletedUser) {
+      return Response('error', 400, 'invalid user id provided');   
+    }
+    // delete all links and pages related to user here
+    return Response('success', 200, 'user deleted successfully');    
+  } catch (error) {
+    return Response('error', 500, (error.message ? error.message : error));
   }
-  // delete all links and pages related to user here
-  return Response('success', 200, 'user deleted successfully');
 }
 
 exports.getAllUsers = async function getAllUsers() {
-  const result = await userModel.find();
-  return Response('success', 201, 'fetched all users successfully', result);
+  try {
+    const result = await userModel.find();
+    return Response('success', 201, 'fetched all users successfully', result);    
+  } catch (error) {
+    return Response('error', 500, (error.message ? error.message : error));
+  }
 }
 
 

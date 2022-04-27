@@ -1,5 +1,4 @@
 // all the controllers come in here
-
 const { getUserById, createUser, updateUser, deleteUser } = require("./models");
 
 exports.getUserById = async (req, res) => {

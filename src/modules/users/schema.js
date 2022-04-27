@@ -6,7 +6,6 @@ const Joi = require('joi');
 // const Joi = BaseJoi.extend(ImageExtension)
 
 exports.userSchema = new mongoose.Schema({
-    id: String,
     name: {
         first : String,
         last : String
