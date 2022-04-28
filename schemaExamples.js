@@ -8,7 +8,6 @@ const user = {
     phoneNumber,
     username,
     password,
-    dob,
     bio,
     profilePhoto,
     role,
@@ -30,6 +29,11 @@ const link =  {
 const page = {
     _id,
     title,
-    hits,
     links: [],
+    analytics: {
+        hits,
+        likes,
+        comments,
+        transactions
+    }
 }
