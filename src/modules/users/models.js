@@ -28,7 +28,7 @@ exports.getUserById = async function getUserById(id) {
     if(!result) {
       return Response('error', 400, 'invalid user id provided');
     }
-    return Response('success', 201, 'fetched user data successfully', result);
+    return Response('success', 200, 'fetched user data successfully', result);
     
   } catch (error) {
     return Response('error', 500, (error.message ? error.message : error));
@@ -96,7 +96,7 @@ exports.updateUser = async function updateUser(id, userData) {
       ...userData
     }
     const result = await userModel.findByIdAndUpdate(id, updatedUser, { new: true });
-    return Response('success', 201, 'user data updated successfully', result);
+    return Response('success', 200, 'user data updated successfully', result);
   } catch (error) {
     return Response('error', 500, (error.message ? error.message : error));
   }
@@ -119,7 +119,7 @@ exports.deleteUser = async function deleteUser(id) {
 exports.getAllUsers = async function getAllUsers() {
   try {
     const result = await userModel.find();
-    return Response('success', 201, 'fetched all users successfully', result);    
+    return Response('success', 200, 'fetched all users successfully', result);    
   } catch (error) {
     return Response('error', 500, (error.message ? error.message : error));
   }

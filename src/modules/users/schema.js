@@ -54,22 +54,26 @@ exports.userSchemaValidator = Joi.object({
         .required(),
 
     phoneNumber: Joi.object().keys({
-        countryCode: Joi.number().required(),
+        countryCode: Joi.number()
+            .required(),
 
-        number: Joi.number().required()
+        number: Joi.number()
+            .required()
     }),
 
     password: Joi.string(),
 
-    profilePhoto: Joi.string().uri(),
+    profilePhoto: Joi.string()
+        .uri(),
 
     bio: Joi.string()
-        .max(240),
+        .max(1024),
         
     role: Joi.string()
         .required(),
 
-    coverPhoto: Joi.string().uri(),
+    coverPhoto: Joi.string()
+        .uri(),
 
     subscription: Joi.string()
         .required(),
