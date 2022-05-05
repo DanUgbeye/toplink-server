@@ -5,10 +5,11 @@ const { linkSchemaValidator, linkSchema } = require("./schema");
 const { validateData } = require("../../utils/validator");
 const Response = require("../../utils/response");
 const Joi = require("joi");
+const { link } = require("joi");
 
 const linkModel = mongoose.model("Link", linkSchema);
 
-async function isUniqueLink(url, author) {
+exports.isUniqueLink = async function isUniqueLink(url, author) {
   let link = await linkModel.find({
     $and: [{ author: author }, { url: url }],
   });
@@ -18,97 +19,62 @@ async function isUniqueLink(url, author) {
   return false;
 }
 
+exports.authorExists = async (authorId, linkId=null) => {
+  try {
+    let author = (
+      linkId === null ? 
+      await mongoose.models.User.find({ _id: authorId }) : 
+      await linkModel.find({ _id: linkId , author: authorId})
+    );
+    if(!!author.length) {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    return false;    
+  }
+}
+
 exports.getLinkById = async function getLinkById(id) {
   try {
     const result = await linkModel.find({ _id: id });
     if (!result.length) {
-      return Response("error", 400, "invalid link id provided");
+      // return Response("error", 400, "invalid link id provided");
+      throw new Error('invalid link id provided');
     }
-    return Response("success", 200, "fetched link successfully", result);
+    return result;
   } catch (error) {
-    return Response("error", 500, (error.message ? error.message : error));
+    // return Response("error", 500, (error.message ? error.message : error));
+    throw error;
   }
 };
 
 exports.createLink = async function createLink(link) {
-  let validatedData = await validateData(link, linkSchemaValidator);
-
-  // if the link data is not valid, return an error response
-  if (!validatedData.isValid) {
-    return Response("error", 400, (validatedData.error.message ? validatedData.error.message : validatedData.error));
+  try {
+    const newLink = new linkModel(link);
+    const result = await newLink.save();
+    return result;
+  } catch (error) {
+    // return Response("error", 500, (error.message ? error.message : error));
+    throw new Error(error);
   }
-
-  if (!(await isUniqueLink(link.url, link.author))) {
-    return Response("error", 400, " Link already exists");
-  }
-
-  const newLink = new linkModel(link);
-  const response = newLink
-    .save()
-    .then((result) => {
-      return Response("success", 201, "Link created successfully", result);
-    })
-    .catch((error) => {
-      return Response("error", 500, (error.message ? error.message : error));
-    });
-    return response;
 };
 
 exports.updateLink = async function updateLink(id, linkData) {
-  if (linkData.url) {
-    // checking if the new url to be updated is a valid url
-    try {
-      await Joi.string().uri().validateAsync(linkData.url);
-    } catch (error) {
-      return Response("error", 400, "url must be valid url");
-    }
-
-    // checking if the new link is unique to the author
-    if (!(await isUniqueLink(linkData.url, linkData.author))) {
-      return Response(
-        "error",
-        400,
-        "This link already exists with this author "
-      );
-    }
+  const link = await linkModel.find({ _id: id });
+  if (!link) {
+    throw new Error('invalid link id provided');
   }
-
-  // checking if the new icon url to be updated is a valid url
-  if(linkData.icon) {
-    try {
-      await Joi.string().uri().validateAsync(linkData.icon);
-    } catch (error) {
-      return Response("error", 400, "icon must be a valid url");
-    }
-  }
-
-  try {
-    const link = await linkModel.find({ _id: id });
-    if (!link.length) {
-      return Response("error", 400, "invalid link id provided");
-    }
-    // updates the link data
-    const updatedLink = {
-      ...link,
-      ...linkData,
-    };
-    const result = await linkModel.findByIdAndUpdate(id, updatedLink, { new: true });
-    return Response("success", 200, "Link updated successfully", result);
-  } catch (error) {
-    return Response("error", 500, (error.message ? error.message : error));
-  }
+  const result = await linkModel.findByIdAndUpdate(id, linkData, { new: true });
+  return result;
 };
 
 exports.deleteLink = async function deleteLink(id) {
-  try {
-    const deletedLink = await linkModel.findByIdAndDelete(id);
-    if (!deletedLink) {
-      return Response("error", 400, "invalid link id provided");
-    }
-    return Response("success", 200, "link deleted successfully");    
-  } catch (error) {
-    return Response("error", 500, (error.message ? error.message : error));
+  const deletedLink = await linkModel.findByIdAndDelete(id);
+  if (!deletedLink) {
+    throw new Error('invalid link id provided');
   }
+  return deletedLink;
 };
 
 exports.getAllLinks = async function getAllLink(author) {

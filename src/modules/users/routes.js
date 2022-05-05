@@ -11,4 +11,4 @@ userRouter.route('/:id').patch(updateUser)
 
 userRouter.route('/:id').delete(deleteUser)
 
-module.exports = { userRouter }
+module.exports = userRouter;
