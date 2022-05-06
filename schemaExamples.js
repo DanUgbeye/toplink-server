@@ -33,7 +33,6 @@ const page = {
     analytics: {
         hits,
         likes,
-        comments,
         transactions
     }
 }

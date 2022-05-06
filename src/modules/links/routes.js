@@ -11,4 +11,4 @@ linkRouter.route('/:id').patch(updateLink)
 
 linkRouter.route('/:id').delete(deleteLink)
 
-module.exports = { linkRouter }
+module.exports = linkRouter;
