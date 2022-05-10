@@ -22,6 +22,7 @@ exports.createLinkSchemaValidator = Joi.object().keys({
 
     privacy: Joi.boolean()
 });
+
 exports.updateLinkSchemaValidator = Joi.object().keys({
     author: Joi.string()
         .required(),
