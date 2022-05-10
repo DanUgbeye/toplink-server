@@ -101,10 +101,8 @@ exports.updateUserSchemaValidator = Joi.object({
 
     phoneNumber: Joi.object().keys({
         countryCode: Joi.number(),
-           
-
-        number: Joi.number()
-            
+        
+        number: Joi.number()            
     }),
 
     password: Joi.string(),
