@@ -25,7 +25,7 @@ exports.userSchema = new mongoose.Schema({
     disabled: Boolean
 });
 
-exports.userSchemaValidator = Joi.object({
+exports.createUserSchemaValidator = Joi.object({
 
     name: Joi.object().keys({
         first: Joi.string()
@@ -80,5 +80,50 @@ exports.userSchemaValidator = Joi.object({
 
     disabled: Joi.boolean()
         .required(),
+});
+
+exports.updateUserSchemaValidator = Joi.object({
+
+    name: Joi.object().keys({
+        first: Joi.string()
+            .min(2)
+            .max(50),
+
+        last: Joi.string()
+            .min(2)
+            .max(50)
+    }),
+
+    username: Joi.string()
+        .alphanum()
+        .min(4)
+        .max(50),
+
+    phoneNumber: Joi.object().keys({
+        countryCode: Joi.number(),
+           
+
+        number: Joi.number()
+            
+    }),
+
+    password: Joi.string(),
+
+    profilePhoto: Joi.string()
+        .uri(),
+
+    bio: Joi.string()
+        .max(1024),
+
+    role: Joi.string(),
+       
+
+    coverPhoto: Joi.string()
+        .uri(),
+
+    subscription: Joi.string(),
+       
+    disabled: Joi.boolean()
+        
 });
 
