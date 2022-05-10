@@ -4,16 +4,35 @@
  * @param message the message to be sent
  * @param data contains the fetched resource if any
  */
-const Response = (type='', code=200, message='', data={}) => {
-    const response = {
-        code,
-        status: type,
-        message,
+
+class Response {
+    constructor(code, message, data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
     }
-    if(type === 'success' && data) {
-        response.data = data;
+
+    error() {
+        return {
+            code: this.code,
+            message: this.message
+        }
     }
-    return response;
+
+    successMessage() {
+        return {
+            code: this.code,
+            message: this.message
+        }
+    }
+
+    successData() {
+        return {
+            code: this.code,
+            message: this.message,
+            data: this.data
+        }
+    }
 }
 
 module.exports = Response;
