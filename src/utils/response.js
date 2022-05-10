@@ -6,31 +6,29 @@
  */
 
 class Response {
-    constructor(code, message, data) {
-        this.code = code;
-        this.message = message;
-        this.data = data;
-    }
 
-    error() {
+    static error(code, message) {
         return {
-            code: this.code,
-            message: this.message
+            status: 'error',
+            code: code,
+            message: message
         }
     }
 
-    successMessage() {
+    static success(code, message) {
         return {
-            code: this.code,
-            message: this.message
+            status: 'success',
+            code: code,
+            message: message
         }
     }
 
-    successData() {
+    static success(code, message, data) {
         return {
-            code: this.code,
-            message: this.message,
-            data: this.data
+            status: 'success',
+            code: code,
+            message: message,
+            data: data
         }
     }
 }

@@ -10,11 +10,11 @@ exports.getUserById = async (req, res) => {
     try {
         let id = req.params.id
         const result = await User.getById(id);
-        let response = new Response(200, 'fetched user data successfully', result).successData();
+        let response = Response.success(200, 'fetched user data successfully', result);
         res.status(response.code).send(response);
         return;
     } catch (error) {
-        let response = new Response(400, (error.message ? error.message : error)).error();
+        let response = Response.error(400, (error.message ? error.message : error));
         res.status(response.code).send(response);
         return;
     }
@@ -27,29 +27,29 @@ exports.createUser = async (req, res) => {
 
         // if the user data is not valid, return an error response
         if(!validatedData.isValid) {
-            let response = new Response(400, (validatedData.error.message ? validatedData.error.message : validatedData.error)).error();
+            let response = Response.error(400, (validatedData.error.message ? validatedData.error.message : validatedData.error));
             res.status(response.code).send(response);
             return;
         }
 
         if( !(await User.isUniqueEmail(user.email)) ) {
-            let response = new Response(400, 'email address already exists').error();
+            let response = Response.error(400, 'email address already exists');
             res.status(response.code).send(response);
             return;
         }
 
         if( !(await User.isUniqueUsername(user.username)) ) {
-            let response = new Response(400, 'username already exists').error();   
+            let response = Response.error(400, 'username already exists');   
             res.status(response.code).send(response);
             return;
         }
 
         const result = await User.create(user);
-        let response = new Response(201, 'user created successfully', result).successData();
+        let response = Response.success(201, 'user created successfully', result);
         res.status(response.code).send(response);
         return;
     } catch (error) {
-        let response = new Response(400, (error.message ? error.message : error)).error();
+        let response = Response.error(400, (error.message ? error.message : error));
         res.status(response.code).send(response);
         return;
     }
@@ -61,7 +61,7 @@ exports.updateUser = async (req, res) => {
         const userData = req.body;
         if(userData.email) {
             if( !(await User.isUniqueEmail(userData.email)) ) {
-                let response = new Response(400, 'email address already exists').error();
+                let response = Response.error(400, 'email address already exists');
                 res.status(response.code).send(response);
                 return;
             }
@@ -69,7 +69,7 @@ exports.updateUser = async (req, res) => {
         
           if(userData.username) {
             if( !(await User.isUniqueUsername(userData.username)) ) {
-                let response = new Response(400, 'username already exists').error();   
+                let response = Response.error(400, 'username already exists');   
                 res.status(response.code).send(response);
                 return;
             }
@@ -84,11 +84,11 @@ exports.updateUser = async (req, res) => {
           }
 
         const result = await User.update(id, userData)
-        let response = new Response(200, 'user data updated successfully', result).successData();
+        let response = Response.success(200, 'user data updated successfully', result);
         res.status(response.code).send(response);
         return;
     } catch (error) {
-        let response = new Response(400, (error.message ? error.message : error)).error();
+        let response = Response.error(400, (error.message ? error.message : error));
         res.status(response.code).send(response);
         return;
     }
@@ -98,11 +98,11 @@ exports.deleteUser = async (req, res) => {
     try {
         let id = req.params.id;
         const result = await User.delete(id);
-        let response = new Response(200, 'user deleted successfully').successMessage();
+        let response = Response.success(200, 'user deleted successfully');
         res.status(response.code).send(response);
         return;
     } catch (error) {
-        let response = new Response(400, (error.message ? error.message : error)).error();
+        let response = Response.error(400, (error.message ? error.message : error));
         res.status(response.code).send(response);
         return;
     }
