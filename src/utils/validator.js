@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('joi')
 
 /**
  * 
@@ -14,7 +14,7 @@ exports.validateData = async (data, validator) => {
             value
         };
     }
-     catch (error) {
+    catch (error) {
         return {
             isValid: false,
             error
