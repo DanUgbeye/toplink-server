@@ -16,7 +16,7 @@ app.route('/').get((req, res) => {
     res.send('server up and running!!!');
 });
 
-app.use(Router);
+app.use('/api/v1',Router);
 
 const conn = dbConnection();
 

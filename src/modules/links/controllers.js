@@ -3,7 +3,7 @@ const Response = require('../../utils/response');
 const { validateData } = require("../../utils/validator");
 const { createLinkSchemaValidator, updateLinkSchemaValidator } = require("./schema");
 const Link = require("./models");
-const Joi = require('joi');
+const { formatMessage } = require('../../utils/formatter');
 
 exports.createLink = async (req, res) => {
     // validate here
@@ -13,7 +13,8 @@ exports.createLink = async (req, res) => {
 
         // if the link data is not valid, return an error response
         if (!validatedData.isValid) {
-            let response = Response.error(400, (validatedData.error.message ? validatedData.error.message : validatedData.error));
+            let errorMessage = formatMessage(validatedData.error.message ? validatedData.error.message : validatedData.error);
+            let response = Response.error(400, errorMessage);
             res.status(response.code).send(response);
             return;
         }
@@ -40,7 +41,8 @@ exports.createLink = async (req, res) => {
         return;
         
     } catch (error) {
-        let response = Response.error(400, (error.message ? error.message : error));
+        let errorMessage = formatMessage(error.message ? error.message : error);
+        let response = Response.error(400, errorMessage);
         res.status(response.code).send(response);
         return;
     }
@@ -55,25 +57,28 @@ exports.getLinkById = async (req, res) => {
         res.status(response.code).send(response);
         
     } catch (error) {
-        let response = Response.error(400, (error.message ? error.message : error));
+        let errorMessage = formatMessage(error.message ? error.message : error);
+        let response = Response.error(400, errorMessage);
         res.status(response.code).send(response);
     }
 }
 
 exports.updateLink = async (req, res) => {
     // validate here
-    let id = req.params.id;
-    const linkData = req.body;
-    
-    let validatedData = await validateData(linkData, updateLinkSchemaValidator);
-
-    // if the link data is not valid, return an error response
-    if (!validatedData.isValid) {
-        let response = Response.error(400, (validatedData.error.message ? validatedData.error.message : validatedData.error));
-        res.status(response.code).send(response);
-        return;
-    }
     try {
+        let id = req.params.id;
+        const linkData = req.body;
+        
+        let validatedData = await validateData(linkData, updateLinkSchemaValidator);
+    
+        // if the link data is not valid, return an error response
+        if (!validatedData.isValid) {
+            let errorMessage = formatMessage(validatedData.error.message ? validatedData.error.message : validatedData.error);
+            let response = Response.error(400, errorMessage);
+            res.status(response.code).send(response);
+            return;
+        }
+        
         // checking if author provided owns the link to be updated
         if(!(await Link.authorExists(linkData.author, id))) {
             // if no author exists
@@ -83,32 +88,12 @@ exports.updateLink = async (req, res) => {
         }
         
         if (linkData.url) {
-            // checking if the new url to be updated is a valid url
-            try {
-              await Joi.string().uri().validateAsync(linkData.url);
-            } catch (error) {
-                let response = Response.error(400, "url must be valid url");
-                res.status(response.code).send(response);
-                return;
-            }
-        
             // checking if the new link is unique to the author
             if (!(await Link.isUnique(linkData.url, linkData.author))) {
                 let response = Response.error(
                     400,
-                    "This link already exists with this author "
+                    "This link already exists with this author"
                 );
-                res.status(response.code).send(response);
-                return;
-            }
-        }
-        
-        // checking if the new icon url to be updated is a valid url
-        if(linkData.icon) {
-            try {
-                await Joi.string().uri().validateAsync(linkData.icon);
-            } catch (error) {
-                let response = Response.error(400, "icon must be a valid url");
                 res.status(response.code).send(response);
                 return;
             }
@@ -121,7 +106,8 @@ exports.updateLink = async (req, res) => {
         return;
 
     } catch (error) {
-        let response = Response.error(400, (error.message ? error.message : error));
+        let errorMessage = formatMessage(error.message ? error.message : error);
+        let response = Response.error(400, errorMessage);
         res.status(response.code).send(response);
         return;
     }
@@ -135,7 +121,8 @@ exports.deleteLink = async (req, res) => {
         let response = Response.success(200, "link deleted successfully");
         res.status(response.code).send(response);
     } catch (error) {
-        let response = Response.error(400, (error.message ? error.message : error));
+        let errorMessage = formatMessage(error.message ? error.message : error);
+        let response = Response.error(400, errorMessage);
         res.status(response.code).send(response);
     }
 }

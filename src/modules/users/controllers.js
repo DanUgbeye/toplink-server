@@ -4,6 +4,7 @@ const { createUserSchemaValidator, updateUserSchemaValidator } = require("./sche
 const { validateData } = require("../../utils/validator");
 const User = require("./models");
 const Response = require('../../utils/response');
+const { formatMessage } = require('../../utils/formatter');
 
 
 exports.getUserById = async (req, res) => {
@@ -14,7 +15,8 @@ exports.getUserById = async (req, res) => {
         res.status(response.code).send(response);
         return;
     } catch (error) {
-        let response = Response.error(400, (error.message ? error.message : error));
+        let errorMessage = formatMessage(error.message ? error.message : error);
+        let response = Response.error(400, errorMessage);
         res.status(response.code).send(response);
         return;
     }
@@ -27,7 +29,8 @@ exports.createUser = async (req, res) => {
 
         // if the user data is not valid, return an error response
         if(!validatedData.isValid) {
-            let response = Response.error(400, (validatedData.error.message ? validatedData.error.message : validatedData.error));
+            let errorMessage = formatMessage(validatedData.error.message ? validatedData.error.message : validatedData.error);
+            let response = Response.error(400, errorMessage);
             res.status(response.code).send(response);
             return;
         }
@@ -49,7 +52,8 @@ exports.createUser = async (req, res) => {
         res.status(response.code).send(response);
         return;
     } catch (error) {
-        let response = Response.error(400, (error.message ? error.message : error));
+        let errorMessage = formatMessage(error.message ? error.message : error);
+        let response = Response.error(400, errorMessage);
         res.status(response.code).send(response);
         return;
     }
@@ -64,7 +68,8 @@ exports.updateUser = async (req, res) => {
 
         // if the link data is not valid, return an error response
         if (!validatedData.isValid) {
-            let response = Response.error(400, (validatedData.error.message ? validatedData.error.message : validatedData.error));
+            let errorMessage = formatMessage(validatedData.error.message ? validatedData.error.message : validatedData.error);
+            let response = Response.error(400, errorMessage);
             res.status(response.code).send(response);
             return;
         }
@@ -97,7 +102,8 @@ exports.updateUser = async (req, res) => {
         res.status(response.code).send(response);
         return;
     } catch (error) {
-        let response = Response.error(400, (error.message ? error.message : error));
+        let errorMessage = formatMessage(error.message ? error.message : error);
+        let response = Response.error(400, errorMessage);
         res.status(response.code).send(response);
         return;
     }
@@ -111,7 +117,8 @@ exports.deleteUser = async (req, res) => {
         res.status(response.code).send(response);
         return;
     } catch (error) {
-        let response = Response.error(400, (error.message ? error.message : error));
+        let errorMessage = formatMessage(error.message ? error.message : error);
+        let response = Response.error(400, errorMessage);
         res.status(response.code).send(response);
         return;
     }

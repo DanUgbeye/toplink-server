@@ -17,7 +17,7 @@ exports.createLinkSchemaValidator = Joi.object().keys({
         .uri()
         .required()),
 
-    icon: Joi.string()
+    icon: Joi.string().uri()
         .required(),
 
     privacy: Joi.boolean()
@@ -31,14 +31,14 @@ exports.updateLinkSchemaValidator = Joi.object().keys({
         .min(3)
         .max(30),
 
-
     description: Joi.string()
         .max(1024),
 
     url: ('http://', Joi.string()
         .uri()),
     
-    icon: Joi.string(),
+    icon: Joi.string()
+        .uri(),
     
     privacy: Joi.boolean()
 });
