@@ -12,9 +12,9 @@ app.use(morgan('tiny'));
 app.use(express.json());
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-app.route('/').get((req, res) => {
-    res.send('server up and running!!!');
-});
+// app.route('/').get((req, res) => {
+//    res.send('server up and running!!!');
+// });
 
 app.use('/api/v1',Router);
 

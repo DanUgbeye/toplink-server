@@ -16,4 +16,9 @@ Router.route('/success').get((req, res) => {
     const response = Response.success( 200, 'you messaged this api');
     res.send(response);
 })
+
+
 module.exports = Router;
+
+// const random = require('randomstring');
+// console.log(random.generate(40))

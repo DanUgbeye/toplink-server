@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon ./src/index.js",
-    "start": "node ./src/index.js"
+    "start": "nodemon ./src/index.js"
   },
   "repository": {
     "type": "git",
@@ -21,14 +21,16 @@
   "homepage": "https://github.com/DanUgbeye/toplink-server#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.17.3",
+    "express": "^4.18.1",
+    "express-openid-connect": "^2.7.2",
     "joi": "^17.6.0",
     "mongoose": "^6.3.1",
     "morgan": "^1.10.0",
-    "multer": "^1.4.4"
+    "multer": "^1.4.4",
+    "randomstring": "^1.2.2"
   },
   "devDependencies": {
     "dotenv": "^16.0.0",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.16"
   }
 }
