@@ -4,7 +4,7 @@ const linkRouter = require('./modules/links/routes');
 const userRouter = require('./modules/users/routes');
 const Response = require('./utils/response');
 
-Router.use('/auth', authRouter);
+Router.use(authRouter);
 Router.use('/user', userRouter);
 Router.use('/link', linkRouter);
 // Router.use('/page', pageRouter);

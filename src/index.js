@@ -16,7 +16,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 //    res.send('server up and running!!!');
 // });
 
-app.use('/api/v1',Router);
+app.use(Router);
 
 const conn = dbConnection();
 

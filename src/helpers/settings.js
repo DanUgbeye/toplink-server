@@ -16,7 +16,7 @@ class Settings {
     return process.env.DB_URI || config.db_uri
   }
   static getSecret() {
-    let secret = process.env.SECRET || config.secret
+    let secret = process.env.SECRET || config.auth0_secret
     return secret;
   
   }
@@ -25,11 +25,11 @@ class Settings {
     return baseURL;
   }
   static getClientID() {
-    let clientID = process.env.CLIENTID || config.clientID
+    let clientID = process.env.CLIENTID || config.auth0_clientID
     return clientID;
   }
   static getIssuerBaseURL() {
-    let issuerBaseURL = process.env.ISSUERBASEURL || config.issuerBaseURL
+    let issuerBaseURL = process.env.ISSUERBASEURL || config.auth0_issuerBaseURL
     return issuerBaseURL;
   }
 }

@@ -15,23 +15,16 @@ const config = {
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 let authRouter = auth(config);
 
-// Router.get('/', (req, res) => {
-//     res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
-// });
+authRouter.get('/', (req, res) => {
+    if(req.oidc.isAuthenticated()) {
+        res.redirect('/user/62745963a26eb6dfc8ad55a5');
+        return;
+    }
+    res.redirect('/login');
+});
 
-// // req.isAuthenticated is provided from the auth router
-// Router.get('/login', (req, res) => {
-//     res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
-// });
+authRouter.get('/profile', requiresAuth(), (req, res) => {
+    res.send(req.oidc.user);
+});
 
-// Router.get('/authoUser', requiresAuth(), (req, res) => {
-
-//     if (req.oidc.user.email) {
-//         res.send('Email Already Exist!!!')
-//     }
-//     else {
-//         res.send("Email Not Found!!!");
-//     }
-
-// });
 module.exports = authRouter;
