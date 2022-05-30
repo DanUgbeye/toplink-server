@@ -15,6 +15,22 @@ class Settings {
   static getDB_URI() {
     return process.env.DB_URI || config.db_uri
   }
+
+  static getSecret() {
+    return process.env.SECRET || config.secret
+  }
+
+  static getBaseURL() {
+    return process.env.BASEURL || config.baseURL
+  }
+
+  static getClientID() {
+    return process.env.CLIENTID || config.clientID
+  }
+
+  static getIssuerBaseURL() {
+    return process.env.ISSUERBASEURL || config.issuerBaseURL
+  }
 }
 
 module.exports = Settings;

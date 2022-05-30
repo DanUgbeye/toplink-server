@@ -4,16 +4,33 @@
  * @param message the message to be sent
  * @param data contains the fetched resource if any
  */
-const Response = (type='', code=200, message='', data={}) => {
-    const response = {
-        code,
-        status: type,
-        message,
+
+class Response {
+
+    static error(code, message) {
+        return {
+            status: 'error',
+            code: code,
+            message: message
+        }
     }
-    if(type === 'success' && data) {
-        response.data = data;
+
+    static success(code, message) {
+        return {
+            status: 'success',
+            code: code,
+            message: message
+        }
     }
-    return response;
+
+    static success(code, message, data) {
+        return {
+            status: 'success',
+            code: code,
+            message: message,
+            data: data
+        }
+    }
 }
 
 module.exports = Response;
