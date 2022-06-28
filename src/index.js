@@ -5,36 +5,21 @@ const Settings = require('./helpers/settings');
 const { dbConnection } = require('./utils/database');
 const Router = require('./appRouter');
 const userRouter = require('./modules/users/routes');
-// const { auth, requiresAuth } = require('express-openid-connect')
-
-//auth router
-const { authRouter } = require('./modules/auths/routes')
-
-
-// auth0 configuration
-// const config = {
-//     authRequired: false,
-//     auth0Logout: true,
-//     secret: Settings.getSecret(),
-//     baseURL: Settings.getBaseURL(),
-//     clientID: Settings.getClientID(),
-//     issuerBaseURL: Settings.getIssuerBaseURL()
-//   };
-
-
+const { verifyAccessToken } = require("./helpers/jwthelper")
 const app = express();
 app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
-// app.use(auth(config));
 
-app.use(Router);
-app.use(authRouter)
-
-app.route('/').get((req, res) => {
+app.route('/', verifyAccessToken).get((req, res) => {
     res.send('server up and running!!!');
 });
+app.get("/okay", verifyAccessToken,(req, res)=>{
+    res.send("Hello world")
+})
+app.use(Router);
+
 
 const conn = dbConnection();
 

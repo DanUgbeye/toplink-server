@@ -1,9 +1,12 @@
+
 // all the controllers come in here
 const mongoose = require('mongoose');
-const { userSchemaValidator } = require("./schema");
+const { createUserSchemaValidator, updateUserSchemaValidator } = require("./schema");
 const { validateData } = require("../../utils/validator");
 const User = require("./models");
 const Response = require('../../utils/response');
+const {signAccessToken } = require("../../helpers/jwthelper")
+
 
 
 exports.getUserById = async (req, res) => {
@@ -23,7 +26,7 @@ exports.getUserById = async (req, res) => {
 exports.createUser = async (req, res) => {
     try {
         let user = req.body;
-        let validatedData = await validateData(user, userSchemaValidator);
+        let validatedData = await validateData(user, createUserSchemaValidator);
 
         // if the user data is not valid, return an error response
         if(!validatedData.isValid) {
@@ -45,8 +48,9 @@ exports.createUser = async (req, res) => {
         }
 
         const result = await User.create(user);
+        const accessToken = await signAccessToken(result.id)
         let response = Response.success(201, 'user created successfully', result);
-        res.status(response.code).send(response);
+        res.status(response.code).send({accessToken});
         return;
     } catch (error) {
         let response = Response.error(400, (error.message ? error.message : error));
@@ -59,6 +63,15 @@ exports.updateUser = async (req, res) => {
     try {
         let id = req.params.id;
         const userData = req.body;
+        
+        let validatedData = await validateData(userData, updateUserSchemaValidator);
+
+        // if the link data is not valid, return an error response
+        if (!validatedData.isValid) {
+            let response = Response.error(400, (validatedData.error.message ? validatedData.error.message : validatedData.error));
+            res.status(response.code).send(response);
+            return;
+        }
         if(userData.email) {
             if( !(await User.isUniqueEmail(userData.email)) ) {
                 let response = Response.error(400, 'email address already exists');

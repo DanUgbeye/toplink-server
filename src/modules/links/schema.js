@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
 
-exports.linkSchemaValidator = Joi.object().keys({
+exports.createLinkSchemaValidator = Joi.object().keys({
     author: Joi.string()
         .required(),
 
@@ -20,6 +20,26 @@ exports.linkSchemaValidator = Joi.object().keys({
     icon: Joi.string()
         .required(),
 
+    privacy: Joi.boolean()
+});
+
+exports.updateLinkSchemaValidator = Joi.object().keys({
+    author: Joi.string()
+        .required(),
+
+    title: Joi.string()
+        .min(3)
+        .max(30),
+
+
+    description: Joi.string()
+        .max(1024),
+
+    url: ('http://', Joi.string()
+        .uri()),
+    
+    icon: Joi.string(),
+    
     privacy: Joi.boolean()
 });
 

@@ -2,8 +2,9 @@ const Router = require('express').Router();
 const linkRouter = require('./modules/links/routes');
 const userRouter = require('./modules/users/routes');
 const Response = require('./utils/response');
+const {verifyAccessToken}= require('./helpers/jwthelper')
 
-Router.use('/user', userRouter);
+Router.use('/user', userRouter );
 Router.use('/link', linkRouter);
 // Router.use('/page', pageRouter);
 

@@ -1,7 +1,7 @@
 // all the controllers come in here
 const Response = require('../../utils/response');
 const { validateData } = require("../../utils/validator");
-const { linkSchemaValidator } = require("./schema");
+const { createLinkSchemaValidator, updateLinkSchemaValidator } = require("./schema");
 const Link = require("./models");
 const Joi = require('joi');
 
@@ -9,7 +9,7 @@ exports.createLink = async (req, res) => {
     // validate here
     try {
         let link = req.body;
-        let validatedData = await validateData(link, linkSchemaValidator);
+        let validatedData = await validateData(link, createLinkSchemaValidator);
 
         // if the link data is not valid, return an error response
         if (!validatedData.isValid) {
@@ -64,6 +64,15 @@ exports.updateLink = async (req, res) => {
     // validate here
     let id = req.params.id;
     const linkData = req.body;
+    
+    let validatedData = await validateData(linkData, updateLinkSchemaValidator);
+
+    // if the link data is not valid, return an error response
+    if (!validatedData.isValid) {
+        let response = Response.error(400, (validatedData.error.message ? validatedData.error.message : validatedData.error));
+        res.status(response.code).send(response);
+        return;
+    }
     try {
         // checking if author provided owns the link to be updated
         if(!(await Link.authorExists(linkData.author, id))) {

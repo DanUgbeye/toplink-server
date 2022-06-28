@@ -16,20 +16,8 @@ class Settings {
     return process.env.DB_URI || config.db_uri
   }
 
-  static getSecret() {
-    return process.env.SECRET || config.secret
-  }
-
-  static getBaseURL() {
-    return process.env.BASEURL || config.baseURL
-  }
-
-  static getClientID() {
-    return process.env.CLIENTID || config.clientID
-  }
-
-  static getIssuerBaseURL() {
-    return process.env.ISSUERBASEURL || config.issuerBaseURL
+  static getSecretKey(){
+    return process.env.secret_key || config.secret_key
   }
 }
 
