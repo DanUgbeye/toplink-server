@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const Response = require("../utils/response");
 const Settings = require("./settings");
 
-module.exports = {
+module.exports =  {
   signAccessToken: (userId) => {
     return new Promise((resolve, reject) => {
       const payload = {
